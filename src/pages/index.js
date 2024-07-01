@@ -1,9 +1,15 @@
-import BpmnComponent from "@/components/bpmnComponent";
+import dynamic from "next/dynamic";
+import React from "react";
+const BpmnComponent = dynamic(() => import("@/components/bpmnComponent"), {
+  ssr: false,
+});
 
 export default function Home() {
-  const xmlRef = useRef(null);
+  const xmlRef = React.useRef(null);
+
   const handleDownloadXml = async () => {
-    const xml = await xmlRef.current.getXml();
+    console.log({ xmlRef });
+    const xml = await xmlRef.current?.getXml();
     if (xml) {
       const blob = new Blob([xml], { type: "application/xml" });
       const url = URL.createObjectURL(blob);
@@ -17,7 +23,8 @@ export default function Home() {
     }
   };
   const handleDownloadSvg = async () => {
-    const svg = await xmlRef.current.getSvg();
+    console.log({ xmlRef });
+    const svg = await xmlRef.current?.getSvg();
     if (svg) {
       const blob = new Blob([svg], { type: "image/svg+xml" });
       const url = URL.createObjectURL(blob);
@@ -36,7 +43,7 @@ export default function Home() {
       <div style={{ margin: "auto", width: "400px", marginTop: "100px" }}>
         <button
           onClick={async () => {
-            const xml = await xmlRef.current.getXml();
+            const xml = await xmlRef.current?.getXml();
             console.log({ xml });
           }}
         >
