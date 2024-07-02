@@ -4,9 +4,8 @@ const BpmnComponent = dynamic(() => import("@/components/bpmnComponent"), {
   ssr: false,
 });
 
-export default function Home() {
+const Page = () => {
   const xmlRef = React.useRef(null);
-
   const handleDownloadXml = async () => {
     console.log({ xmlRef });
     const xml = await xmlRef.current?.getXml();
@@ -54,4 +53,6 @@ export default function Home() {
       </div>
     </>
   );
-}
+};
+
+export default Page;
