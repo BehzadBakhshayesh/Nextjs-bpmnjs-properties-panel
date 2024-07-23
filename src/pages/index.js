@@ -5,23 +5,9 @@ const BpmnCamundaModeler = dynamic(() => import("@/components/bpmnModeler"), {
   loading: () => <h1>Loadin...</h1>,
 });
 
-const base64ToXml = (base64) => {
-  const binaryString = atob(base64);
-  const parser = new DOMParser();
-  const xml = parser.parseFromString(binaryString, "text/xml");
-  const xmlString = new XMLSerializer().serializeToString(xml);
-  return xmlString;
-};
-const xmlToBase64 = (xmlString) => {
-  let parser = new DOMParser();
-  let xmlDoc = parser.parseFromString(xmlString, "text/xml");
-  let xmlStringified = new XMLSerializer().serializeToString(xmlDoc);
-  let base64String = btoa(xmlStringified);
-  return base64String;
-};
-
 const Page = () => {
   const xmlRef = React.useRef(null);
+
   const handleDownloadBpmn = async () => {
     const xml = await xmlRef.current?.getXml();
     if (xml) {
@@ -52,8 +38,7 @@ const Page = () => {
   };
   const handleUpload = async () => {
     const xml = await xmlRef.current?.getXml();
-    const base64 = xmlToBase64(xml);
-    // upload...
+    console.log({ xml });
   };
   return (
     <>
@@ -65,7 +50,7 @@ const Page = () => {
           margin: "auto",
         }}
       >
-        <BpmnCamundaModeler ref={xmlRef} />
+        <BpmnCamundaModeler xmlRef={xmlRef} />
       </div>
       <div style={{ margin: "auto", width: "400px", marginTop: "100px" }}>
         <button onClick={handleUpload}>upload</button>
