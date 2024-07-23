@@ -47,44 +47,6 @@ const BpmnCamundaModeler = forwardRef(({ diagramXML = initXml }, ref) => {
     async function openDiagram(xml) {
       try {
         await bpmnModeler.current.importXML(xml);
-        // ======================
-        // let canvas = bpmnModeler.current.get("canvas"),
-        //   overlays = bpmnModeler.current.get("overlays");
-        // canvas.zoom("fit-viewport");
-        // overlays.add("SCAN_OK", "note", {
-        //   position: {
-        //     bottom: 0,
-        //     right: 0,
-        //   },
-        //   html: '<div class="diagram-note">Mixed up the labels?</div>',
-        // });
-        // overlays.add("START_PROCESS", "note", {
-        //   position: {
-        //     bottom: 0,
-        //     right: 0,
-        //   },
-        //   scale: false,
-        //   html: '<div class="diagram-note">I don\'t scale</div>',
-        // });
-        // overlays.add("SCAN_QR_CODE", "note", {
-        //   position: {
-        //     bottom: 0,
-        //     right: 0,
-        //   },
-        //   scale: { min: 1 },
-        //   html: '<div class="diagram-note">I don\'t shrink beyond 100%</div>',
-        // });
-        // overlays.add("END_PROCESS", "note", {
-        //   position: {
-        //     bottom: 0,
-        //     right: 0,
-        //   },
-        //   show: {
-        //     minZoom: 5,
-        //   },
-        //   html: '<div class="diagram-note">I hide at low zoom levels</div>',
-        // });
-        // ======================
       } catch (err) {
         console.error("Error importing BPMN diagram", err);
       }
