@@ -9,13 +9,15 @@ import {
   BpmnPropertiesPanelModule,
   BpmnPropertiesProviderModule,
   CamundaPlatformPropertiesProviderModule,
+  CamundaPlatformTooltipProvider,
+  useService,
 } from "bpmn-js-properties-panel";
+import { CreateAppendAnythingModule } from "bpmn-js-create-append-anything";
+import BpmnColorPickerModule from "bpmn-js-color-picker";
 import CamundaBpmnModdle from "camunda-bpmn-moddle/resources/camunda.json";
+import { initXml } from "./initXml";
 
-export const initXml =
-  '<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:b="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:o="http://www.omg.org/spec/DD/20100524/DC" xmlns:x="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="" x:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"><process id="Process_0boow2r"/><b:BPMNDiagram id="sid-74620812-92c4-44e5-949c-aa47393d3830"><b:BPMNPlane id="sid-cdcae759-2af7-4a6d-bd02-53f3352a731d" bpmnElement="Process_0boow2r"/><b:BPMNLabelStyle id="sid-e0502d32-f8d1-41cf-9c4a-cbb49fecf581"><o:Font name="Arial" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/></b:BPMNLabelStyle><b:BPMNLabelStyle id="sid-84cb49fd-2f7c-44fb-8950-83c3fa153d3b"><o:Font name="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/></b:BPMNLabelStyle></b:BPMNDiagram></definitions>';
-
-const BpmnComponent = forwardRef(({ diagramXML = initXml }, ref) => {
+const BpmnCamundaModeler = forwardRef(({ diagramXML = initXml }, ref) => {
   const canvasRef = useRef(null);
   const propertiesPanelRef = useRef(null);
   const bpmnModeler = useRef(null);
@@ -26,31 +28,73 @@ const BpmnComponent = forwardRef(({ diagramXML = initXml }, ref) => {
       propertiesPanel: {
         parent: propertiesPanelRef.current,
       },
+      keyboard: {
+        bindTo: window,
+      },
       additionalModules: [
         BpmnPropertiesPanelModule,
         BpmnPropertiesProviderModule,
         CamundaPlatformPropertiesProviderModule,
+        CamundaPlatformTooltipProvider,
+        useService,
+        CreateAppendAnythingModule,
+        BpmnColorPickerModule,
       ],
       moddleExtensions: {
         camunda: CamundaBpmnModdle,
       },
     });
-
     async function openDiagram(xml) {
       try {
         await bpmnModeler.current.importXML(xml);
+        // ======================
+        // let canvas = bpmnModeler.current.get("canvas"),
+        //   overlays = bpmnModeler.current.get("overlays");
+        // canvas.zoom("fit-viewport");
+        // overlays.add("SCAN_OK", "note", {
+        //   position: {
+        //     bottom: 0,
+        //     right: 0,
+        //   },
+        //   html: '<div class="diagram-note">Mixed up the labels?</div>',
+        // });
+        // overlays.add("START_PROCESS", "note", {
+        //   position: {
+        //     bottom: 0,
+        //     right: 0,
+        //   },
+        //   scale: false,
+        //   html: '<div class="diagram-note">I don\'t scale</div>',
+        // });
+        // overlays.add("SCAN_QR_CODE", "note", {
+        //   position: {
+        //     bottom: 0,
+        //     right: 0,
+        //   },
+        //   scale: { min: 1 },
+        //   html: '<div class="diagram-note">I don\'t shrink beyond 100%</div>',
+        // });
+        // overlays.add("END_PROCESS", "note", {
+        //   position: {
+        //     bottom: 0,
+        //     right: 0,
+        //   },
+        //   show: {
+        //     minZoom: 5,
+        //   },
+        //   html: '<div class="diagram-note">I hide at low zoom levels</div>',
+        // });
+        // ======================
       } catch (err) {
         console.error("Error importing BPMN diagram", err);
       }
     }
-
     openDiagram(diagramXML);
 
     return () => {
       bpmnModeler.current.destroy();
     };
   }, [diagramXML]);
-
   useImperativeHandle(
     ref,
     () => ({
@@ -75,7 +119,6 @@ const BpmnComponent = forwardRef(({ diagramXML = initXml }, ref) => {
     }),
     []
   );
-
   return (
     <div className="content with-diagram">
       <div className="canvas" ref={canvasRef}></div>
@@ -87,6 +130,8 @@ const BpmnComponent = forwardRef(({ diagramXML = initXml }, ref) => {
     </div>
   );
 });
-BpmnComponent.displayName = "BpmnComponent";
-
-export default BpmnComponent;
+BpmnCamundaModeler.displayName = "BpmnCamundaModeler";
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
+export default ({ diagramXML, xmlRef }) => (
+  <BpmnCamundaModeler diagramXML={diagramXML} ref={xmlRef} />
+);

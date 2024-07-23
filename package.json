@@ -12,6 +12,9 @@
     "@bpmn-io/properties-panel": "^3.22.0",
     "bpmn-js": "^17.9.0",
     "bpmn-js-properties-panel": "^5.18.0",
+    "bpmn-js-color-picker": "^0.7.1",
+    "bpmn-js-create-append-anything": "^0.5.2",
+    "camunda-bpmn-moddle": "^7.0.1",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18"
